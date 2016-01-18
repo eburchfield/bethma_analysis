@@ -1,4 +1,3 @@
-
 require(dplyr)
 require(gdata)
 require(ggplot2)
@@ -8,14 +7,13 @@ require(ggmcmc)
 require(string)
 require(BEST)
 require(foreign)
-
-
-#change spread of beta distributions
-
+require(arm)
 
 #data
-y <- c1$ADP1_B1
-vname <- "Is bethma effective?"
+y <- c1$ADP1_A1
+#yes = 1; no = 2
+y <-ifelse(y==1, 1, 0)
+vname <- "Have you heard of bethma?"
 it <- c("Minor", "Major")
 
 #POOLED MEANS
