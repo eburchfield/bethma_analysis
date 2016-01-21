@@ -9,14 +9,18 @@ require(BEST)
 require(foreign)
 require(arm)
 
-#data
-y <- c1$ADP1_A1
+#general model setup
+#comparing model fit
+#plotting results
+
+
+#data setup
+y <- c1$ADP1_B1
 #yes = 1; no = 2
 y <-ifelse(y==1, 1, 0)
-vname <- "Have you heard of bethma?"
+vname <- "Have you ever practiced bethma?"
 it <- c("Minor", "Major")
 n <- length(y)
-
 dc.names <- as.vector(c1$HI4)
 uq <- unique(dc.names)
 itc <- c(0,1,0,1,1,0,0,0,0,1,0,0,1,0,1)
@@ -32,27 +36,37 @@ model_string <- "model{
 
 #level-1 likelihood
 for (i in 1:n){
-y[i] ~ dbern(mu[i])  
-logit(mu[i]) <- a[dc[i]] + b1*x1[i] + b2*x2[i] + b3*x3[i] + b4*x4[i]
+y[i] ~ dbern(mu[i]) #probability of bethma 
+logit(mu[i]) <- a[dc[i]] + b1[dc[i]]*x1[i] + b2[dc[i]]*x2[i] + b3*x3[i] + b4*x4[i]
 }
 
-#level-1 prior
-b1 ~ dnorm(0, .0001)
-b2 ~ dnorm(0, .0001)
-b3 ~ dnorm(0, .0001)
-b4 ~ dnorm(0, .0001)
 
 #level-2 likelihood
 for (j in 1: n.dc ){
 a[j] ~ dnorm(g0 + g1*u[j], tau.a)
+g1 ~ dnorm(0, .0001) #cauchy
+g0 ~ dnorm(0, .0001)
+tau.a <- pow(sigma.a , -2)
+sigma.a ~ dunif (0, 100)  #cauchy
+b1[j] ~ dnorm(b01, .0001) #could do prior for spread
+b2[j]
+
+#level-3 hyperleve
+#sets up probabiliyt dxn for communities
+g0 ~ dnorm()
+g1 ~ dnorm()
+b01 ~ dnorm()
+b02
+b03
+b04
+
 }
 
 #level-2 prior
-g1 ~ dnorm(0, .0001)
-g0 ~ dnorm(0, .0001)
-tau.a <- pow(sigma.a , -2)
-sigma.a ~ dunif (0, 100)
+
 }"
+
+#kruschke - mutliple coins from multiple mints chapter
 
 #initialize variables
 inits <- function(chain) {
@@ -83,7 +97,19 @@ update(model, n.iter = 5000)
 model_outcome <- coda.samples(model, variable.names = parameters, n.iter = 5000)
 
 #plot results
-plot(model_outcome[,'b3'])
+#b1 ses, positive
+#b2 land owner, positive
+#b3 female, negative
+#b4 head-end, no effect
+plot(model_outcome[,'b1'])
+
+#pair plots, corr plots of pair-wise combo of posterior coeff
+#shiny stan - web page dashboard to look at results, does it work with coda output
+
+#WAIC to compare models or leave one out cross validation
+#pull out residuals - STAN model code simulates models using parameters, generate quantities
+
+
 
 #diagnosing mixing of chains, we want good overlap of chains
 samples <- ggs(model_outcome, family = '(sigma|b).*')
