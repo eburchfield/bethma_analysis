@@ -1,0 +1,22 @@
+\documentclass{article}
+\usepackage{natbib}
+\usepackage{amssymb, amsmath}
+\setlength\parindent{0pt}
+
+\begin{document}
+\title{Bethma model specification}
+
+I am interested in predicting the probability of someone practicing an adaptive behavior given individual characteristics and community-level characteristics.  This is a dichotomous outcome, where 1 indicates the individual has engaged in the practice and 0 indicates that they have not.  I am interested in estimating $P(y_i) = 1$.  \\
+\\
+The \textbf{likelihood} function can be specified as follows:
+\begin{align}
+likelihood_i = \pi(x_i)^{y_i}(1-\pi(x_i))^{1-y_i}
+\end{align}
+where $\pi(x_i)$ is the probability of an event $i$ given a covariate vector $x_i$.  This probability can be written as:
+\begin{align}
+\pi(x) = \frac{e^{\beta_0 + \beta_1x_1 ...}}{1 + e^{\beta_0 + \beta_1x_1...}}
+\end{align}
+
+Our \textbf{priors} are the $\beta$ coefficients and the parameters that describe their structure.  If we have no prior information for our $\beta$ coefficients, as is the case in Sri Lanka, we can specify the priors as non-informative, following a normal distribution, $\beta_n \sim N(\mu_n, \sigma_n^2)$.  It is standard to specify $\mu_n$ as zero and the variance as large enough to be non-informative ($10 < \sigma_j < 100$).
+
+\end{document}
