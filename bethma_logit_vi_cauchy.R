@@ -11,13 +11,7 @@ require(arm)
 require(shinystan)
 require(stats)
 
-#data setup
-y <- c1$ADP1_B1
-#yes = 1; no = 2
-y <-ifelse(y==1, 1, 0)
-vname <- "Have you ever practiced bethma?"
-it <- c("Minor", "Major")
-n <- length(y)
+c1 <- as.data.frame(load("C:\Users\Emily Burchfield\Box Sync\WF\Survey\c1_data_full.Rda"))
 dc.names <- as.vector(c1$HI4)
 uq <- unique(dc.names)
 n.dc <- length(uq)
@@ -26,13 +20,19 @@ for (i in 1:n.dc){
   dc[dc.names == uq[i]] <- i
   sample.size <- as.vector(table(dc))
 }
+c1$dc <- dc
+
+df <- c1[!is.na(c1$ADP1_B1),]
+y <- df$ADP1_B1
+y <-ifelse(y==1, 1, 0)
+n <- length(y)
 
 
 model_string <- "model{
 #level-1 likelihood
 for (i in 1:n){
 y[i] ~ dbin(mu[i], 1) 
-p.bound[i] <- max(0, min(1, mu[i])) #381 gelman
+#p.bound[i] <- max(0, min(1, mu[i])) #381 gelman
 logit(mu[i]) <- a[dc[i]] + b1*x1[i] + b2*x2[i] + b3*x3[i] + b4*x4[i]
 + b5*x5[i] + b6*x6[i] + b7*x7[i] + b8*x8[i]
 }
