@@ -49,7 +49,7 @@ b6 ~ dt(0,.1, 1)
 a[j] ~ dt(g0, tau.a,1) #not goj, g1j
 b1[j] ~ dt(b01, .001) #could do prior for spread
 b2[j] ~ dt(b02, .001, 1)  #instead of fixing variance, could make tau.b, etc... to allow for correlatoin
-b3[j] ~ dt(b03, .001, 1)
+b3[j] ~ dt(b03, .001, 1) #build all of these as hyperpriors
 b4[j] ~ dt(b04, .001, 1)
 b5[j] ~ dt(b05, .001, 1)
 b6[j] ~ dt(b06, .001, 1)
@@ -96,10 +96,10 @@ model <- jags.model(textConnection(model_string),
                               n.adapt = 1000)
 
 #take 2000 random samples of each of the 3 chains
-update(model, n.iter = 10000)
-model_outcome <- coda.samples(model, variable.names = parameters, n.iter = 10000)
-my_sso <- as.shinystan(model_outcome)
-my_sso <- launch_shinystan(my_sso)
+update(model, n.iter = 5000)
+model_outcome_2 <- coda.samples(model, variable.names = parameters, n.iter = 5000)
+my_sso_2 <- as.shinystan(model_outcome_2)
+my_sso_2 <- launch_shinystan(my_sso)
 
 
 #diagnosing mixing of chains, we want good overlap of chains
