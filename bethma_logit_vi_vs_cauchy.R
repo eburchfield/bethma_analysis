@@ -15,6 +15,10 @@ require(shinystan)
 #include other relevant variables, build full model 
 #p. 375 GELMAN
 
+#what characterizes a farmer who practiced bethma within a community 
+#how bethma farmers compare to those not engaging in bethma within communities (so how does ADP1_C1-which would need to be made into a binary factor-predict yield). 
+#Finally, we need to figure out why, among the communities where bethma was practiced in 2014 (7, 8, 13, 20), there is variation in the number of farmers who engaged in bethma. 
+
 #data setup
 y <- c1$ADP1_B1
 #yes = 1; no = 2
@@ -45,7 +49,6 @@ b5[dc[i]]*x5[i] + b6[dc[i]]*x6[i] + b7[dc[i]]*x7[i] + b8[dc[i]]*x8[i]
 
 #level-2 likelihood
 for (j in 1: n.dc ){
-b6 ~ dt(0,.1, 1) 
 a[j] ~ dt(g0, tau.a,1) #not goj, g1j
 b1[j] ~ dt(b01, .001) #could do prior for spread
 b2[j] ~ dt(b02, .001, 1)  #instead of fixing variance, could make tau.b, etc... to allow for correlatoin

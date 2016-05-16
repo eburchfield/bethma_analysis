@@ -37,18 +37,18 @@ dc.vars <- tapply(y, dc, var)
 dc.sd <- mean(sqrt (dc.vars [!is.na(dc.vars)] ))/sqrt(sample.size)
 dc.sd.sep <- sqrt(tapply(y, dc, var)/sample.size)
 
-# #plot
-# frame1a <- data.frame ( x = sample.size.jittered , y = dc.mns,
-#                         y.min = dc.mns - dc.sd,
-#                         y.max = dc.mns + dc.sd )
-# 
-# p1a <- ggplot(frame1a , aes(x = x, y = y)) +
-#   labs(x = "DC sample size", y = vname, title = "No pooling") +
-#   geom_hline(yintercept = ybarbar) +
-#   geom_pointrange(aes(ymin = y.min, ymax = y.max, y=y)) +
-#   geom_text(aes(label = it), size = 4, hjust = 1 , vjust = 1)
-# theme_bw() 
-# print(p1a)
+#plot
+frame1a <- data.frame ( x = sample.size.jittered , y = dc.mns,
+                        y.min = dc.mns - dc.sd,
+                        y.max = dc.mns + dc.sd )
+
+p1a <- ggplot(frame1a , aes(x = x, y = y)) +
+  labs(x = "DC sample size", y = vname, title = "No pooling") +
+  geom_hline(yintercept = ybarbar) +
+  geom_pointrange(aes(ymin = y.min, ymax = y.max, y=y)) +
+  geom_text(aes(label = it), size = 4, hjust = 1 , vjust = 1)
+theme_bw() 
+print(p1a)
 
 
 #partial pooling estimates from MLM
