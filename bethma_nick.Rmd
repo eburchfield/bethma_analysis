@@ -12,7 +12,7 @@ library(shinystan)
 source("C:\\Users\\Emily Burchfield\\Box Sync\\WF\\Survey\\load_seads_data.R")
 source("C:\\Users\\Emily Burchfield\\Box Sync\\WF\\Survey\\variable_creation.R")
 lan <- tbl_df(read.csv("C:/Users/Emily Burchfield/Box Sync/WF//Survey/data/LAN.csv", stringsAsFactors = FALSE))
-lan$SHENO <- lan$Ã¯..SHENO
+lan$SHENO <- lan$ï..SHENO  #sheno
 land <- merge(lan, c1, by = "SHENO")
 
 #major system farmers only
@@ -451,10 +451,10 @@ yes <- grp[grp$ADP1_H1 <=3,]  #Moderately or very risky
 I frame these regressions two ways.  First I look at the effect of practicing bethma during the Yala 2014 season (ADP1C1) on Yala 2014 yields (FAR1D5), controlling for the same subset of demographic variables I've controlled for in all of the regressions.  For this regression, I coded farmers who practiced bethma during the 2014 drought with a 1 and all other farmers (NA and 0) as 0 for question ADP1C1.  NA responses to ADP1C1 indicate that farmers have not heard of bethma and did not answer the series of ADP1 questions related to bethma.  Since these farmers have not heard of bethma, it's safe to assume that their yields were unaffected by participation in bethma.  First we present the results from a regression with the variable rice-per-acre as the dependent variable:
 
 ```{r echo=F, message=F, warning=F, eval=F}
-subset <- major
+subset <- major[!is.na(major$FAR1C_5),]
 adpc1 <- ifelse(subset$ADP1_C1 > 3, 0, 1) 
 adpc1[is.na(adpc1)] <- 0
-y <- subset$Rice_per_acre
+y <- subset$FAR1C_5
 n <- length(y)
 gn.names <- as.vector(subset$HI4)
 uq <- unique(gn.names)
@@ -539,7 +539,7 @@ model {
 beta[7]*te + beta[8]*ha + beta[9]*ses, sigma_y);
 }'
 
-data <- list(aw = subset$agrowell_user, bm = adpc1, female = subset$female, fo = subset$fo, ofc = ofc, owner = subset$owner, te = subset$tail_end, ha = subset$Total_HA, ses = subset$Standardized_SES)
+data <- list(aw = subset$agrowell_user, bm = adpc1, female = subset$female, fo = subset$fo, ofc = ofc, owner = subset$owner, te = subset$tail_end, ha = subset$Total_HA, ses = subset$Standardized_SES, y=y, n=n)
   
 
 #replace NA in ofc dataset
@@ -548,7 +548,7 @@ my_sso <- launch_shinystan(lfit_pool)
 
 ```
 
-The results from the multi-level model were largley insignificant, but when estimating a pooled model, i.e. all farmers taken as a single sample, we see some interesting effects.  The effect of participating in bethma during the drought did not have any significant effect on yield.  Owning an agrowell had a strong positive effect on yield.  Owning land surprisingly had a negative effect on yield, as did socio-economic status.  This may reflect the fact that these farmers opted out of cultivation during this drought (?).  We also see a small but significant effect of the total hectares owned on rice yield per acre (i.e. farmers with more fields tend to generate higher per acre yields).  There's a unit mis-match here (acres in independent, hectares in dependent); we'd need to fix this if we decide to include these results.
+The results from the multi-level model were largley insignificant, but when estimating a pooled model, i.e. all farmers taken as a single sample, we see some interesting effects.  The effect of participating in bethma is negative, and strongly so.  The effects of being at the tail-end of a canal were positive; total hectares (unsurprisingly) had a positive effect, and socio-economic status had a positive effect.
 
 First we present the non-significant results from the multi-level model:
 
